@@ -1,0 +1,7 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.bc.study.web.rest.RestTemplateAutoConfiguration,\
+  com.bc.study.web.rest.RestResponseAutoConfiguration,\
+  com.bc.study.web.page.PagingAutoConfiguration,\
+  com.bc.study.web.multipart.MultipartAutoConfiguration
+org.springframework.boot.env.EnvironmentPostProcessor=\
+  com.bc.study.web.WebMvcDefaultPropertiesSetter
