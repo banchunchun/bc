@@ -1,6 +1,9 @@
 package com.bc.study.boot;
 
+import com.bc.study.config.LocalClientConfiguration;
+import com.bc.study.config.LocalClientProperties;
 import com.bc.study.log.TComLogs;
+import com.bc.study.spring.SpringContextHolder;
 import com.bc.study.utils.IOUtils;
 import com.bc.study.utils.StringUtil;
 import java.io.BufferedReader;
@@ -13,10 +16,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Properties;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.Ordered;
+import org.springframework.core.env.PropertiesPropertySource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
@@ -48,11 +53,17 @@ public class BootstrapInitializer implements ApplicationContextInitializer<Confi
   @Override
   public void initialize(ConfigurableApplicationContext appContext) {
     TComLogs.info("enableBC,BootstrapInitializer init");
-
+    Properties systemDef = LocalClientConfiguration.getLocalProperties();
+    PropertiesPropertySource ps = new PropertiesPropertySource("INITIALIZER", systemDef);
+    appContext.getEnvironment().getPropertySources().addFirst(ps);
+    if (appContext.getParent() != null) {
+      return;
+    }
+    SpringContextHolder.set(appContext);
     // 获取所有的组件开启注解
     Map<EnableInitializer, Annotation> initializerAnnotations = new HashMap<EnableInitializer, Annotation>();
     getEnableInitializer(initializerAnnotations);
-    Class<?> applicationClass = loadMainAnnoClass();
+    Class<?> applicationClass = ((LocalClientProperties) systemDef).getApplicationClasss();
     TComLogs.info("load spring main class ={}", applicationClass);
     getEnableInitializer(null, applicationClass, initializerAnnotations);
     Map<ApplicationInitializer, EnableInitializer> initializerMap = new HashMap<ApplicationInitializer, EnableInitializer>();

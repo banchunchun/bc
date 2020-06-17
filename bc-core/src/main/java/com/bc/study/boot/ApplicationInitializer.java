@@ -1,5 +1,6 @@
 package com.bc.study.boot;
 
+import com.bc.study.utils.StringUtil;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -117,6 +118,7 @@ public interface ApplicationInitializer {
   }
 
 
+
   /**
    * 将包含目标注解的类注入到bean容器里，扫描的包是根据bee-core的scanPackage配置进行注入的
    */
@@ -144,7 +146,7 @@ public interface ApplicationInitializer {
 
   default public String[] getScanPackages(ConfigurableApplicationContext applicationContext) {
     String[] scanPackages;
-    String scanPackage = System.getProperty("bee.config.scanPackage");
+    String scanPackage = System.getProperty("bc.config.scanPackage");
     List<String> scanpackageList = new ArrayList<String>();
     List<String> configSplitList = new ArrayList<String>();
     if (!StringUtils.isBlank(scanPackage)) {
@@ -152,7 +154,7 @@ public interface ApplicationInitializer {
         configSplitList.add(pack);
       }
     }
-    String springContextScanPackage = applicationContext.getEnvironment().getProperty("bee.config.scanPackage");
+    String springContextScanPackage = applicationContext.getEnvironment().getProperty("bc.config.scanPackage");
     if (!StringUtils.isBlank(springContextScanPackage)) {
       for (String pack : springContextScanPackage.split(",")) {
         configSplitList.add(pack);
@@ -177,5 +179,24 @@ public interface ApplicationInitializer {
     scanPackages = new String[scanpackageList.size()];
     scanpackageList.toArray(scanPackages);
     return scanPackages;
+  }
+
+  default public <T> void findAnnotationOnClass(Class<?> clazz, Class<T> target, List<T> annotations) {
+    if (clazz == null || clazz.equals(Object.class) || StringUtil.startsWith(clazz.getName(), "java")) {
+      return;
+    }
+    for (Annotation annotation : clazz.getAnnotations()) {
+      Class<?> annClass = annotation.annotationType();
+      if (annClass.equals(target)) {
+        annotations.add((T) annotation);
+      }
+      if (!annClass.equals(clazz)) {
+        findAnnotationOnClass(annClass, target, annotations);
+      }
+    }
+    findAnnotationOnClass(clazz.getSuperclass(), target, annotations);
+    for (Class<?> intf : clazz.getInterfaces()) {
+      findAnnotationOnClass(intf, target, annotations);
+    }
   }
 }

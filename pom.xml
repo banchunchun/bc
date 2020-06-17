@@ -14,9 +14,11 @@
 
   <modules>
     <module>bc-assembly-descriptor</module>
+    <module>bc-parent</module>
     <module>bc-core</module>
     <module>bc-dependencies</module>
     <module>bc-web</module>
+    <module>bc-jdbc</module>
 
   </modules>
 
