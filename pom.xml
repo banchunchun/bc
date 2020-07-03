@@ -19,6 +19,7 @@
     <module>bc-dependencies</module>
     <module>bc-web</module>
     <module>bc-jdbc</module>
+    <module>bc-redis</module>
 
   </modules>
 
