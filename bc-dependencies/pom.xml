@@ -35,7 +35,7 @@
     <rxjava2.version>2.1.6</rxjava2.version>
     <mybatis-typehandlers-jsr310.version>1.0.2</mybatis-typehandlers-jsr310.version>
     <netty.version>4.1.59.Final</netty.version>
-    <guava.version>28.1-jre</guava.version>
+    <guava.version>29.0-jre</guava.version>
   </properties>
 
   <dependencyManagement>
