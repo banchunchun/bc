@@ -34,7 +34,7 @@
     <lombok.version>1.16.18</lombok.version>
     <rxjava2.version>2.1.6</rxjava2.version>
     <mybatis-typehandlers-jsr310.version>1.0.2</mybatis-typehandlers-jsr310.version>
-    <netty.version>4.1.77.Final</netty.version>
+    <netty.version>4.1.108.Final</netty.version>
     <guava.version>29.0-jre</guava.version>
   </properties>
 
